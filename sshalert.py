@@ -15,7 +15,8 @@ try:
     nexmo_key = os.getenv("NEXMO_KEY")
     nexmo_secret = os.getenv("NEXMO_SECRET")
 except:
-    logging.critical("ERROR: Have you exported all required environment variables? (TARGET_PHONE_NUMBER, NEXMO_KEY, NEXMO_SECRET)")
+    logging.critical(
+        "ERROR: Have you exported all required environment variables? (TARGET_PHONE_NUMBER, NEXMO_KEY, NEXMO_SECRET)")
     exit(1)
 
 # Initialize the nexmo client
@@ -26,7 +27,8 @@ def poll_logfile(filename):
     """
     Polls a logfile for sudo commands or ssh logins.
     """
-    f = subprocess.Popen(["tail", "-F", "-n", "0", filename], encoding="utf8", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    f = subprocess.Popen(["tail", "-F", "-n", "0", filename], encoding="utf8", stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
     p = select.poll()
     p.register(f.stdout)
 
@@ -43,7 +45,7 @@ def process_log_entry(logline):
     # If it's a local sudo exec
     if all(x in logline for x in ["sudo", "COMMAND"]):
         send_sms(logline)
-    
+
     # If it's an SSH login
     elif all(x in logline for x in ["ssh", "Accepted"]):
         send_sms(logline)
